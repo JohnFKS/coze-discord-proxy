@@ -214,18 +214,36 @@ func processMessageForOpenAIImage(m *discordgo.MessageUpdate) model.OpenAIImages
 	}
 }
 
+// func SendMessage(channelID, message string) (*discordgo.Message, error) {
+// 	if Session == nil {
+// 		return nil, fmt.Errorf("Discord session not initialized")
+// 	}
+
+// 	// 添加@机器人逻辑
+// 	sentMsg, err := Session.ChannelMessageSend(channelID, fmt.Sprintf("<@%s> %s", cozeBotId, message))
+// 	if err != nil {
+// 		return nil, fmt.Errorf("error sending message: %s", err)
+// 	}
+// 	return sentMsg, nil
+// }
+
 func SendMessage(channelID, message string) (*discordgo.Message, error) {
 	if Session == nil {
 		return nil, fmt.Errorf("Discord session not initialized")
 	}
-
-	// 添加@机器人逻辑
-	sentMsg, err := Session.ChannelMessageSend(channelID, fmt.Sprintf("<@%s> %s", cozeBotId, message))
+	var sentMsg *discordgo.Message
+	var err error
+	if message == "/clear" {
+		sentMsg, err = Session.ChannelMessageSend(channelID, message)
+	} else {
+		sentMsg, err = Session.ChannelMessageSend(channelID, fmt.Sprintf("<@%s> %s", cozeBotId, message))
+	}
 	if err != nil {
 		return nil, fmt.Errorf("error sending message: %s", err)
 	}
 	return sentMsg, nil
 }
+
 
 func ChannelCreate(guildID, channelName string) (string, error) {
 	// 创建新的频道
